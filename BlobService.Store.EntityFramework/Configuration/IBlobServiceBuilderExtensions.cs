@@ -11,13 +11,19 @@ namespace BlobService.Store.EntityFramework.Configuration
 {
     public static class IBlobServiceBuilderExtensions
     {
-        public static IBlobServiceBuilder AddEfMetaStores(this IBlobServiceBuilder builder, string connectionString)
+        public static IBlobServiceBuilder AddEfMetaStores(this IBlobServiceBuilder builder, Action<EfStoreOptions> setupAction = null)
         {
+            var efStoreOptions = new EfStoreOptions();
+            setupAction?.Invoke(efStoreOptions);
+            efStoreOptions.TryValidate();
+
+            builder.Services.AddSingleton(efStoreOptions);
+
             builder.Services
                .AddEntityFramework()
                .AddDbContext<BlobServiceContext>(options =>
                {
-                   options.UseSqlServer(connectionString);
+                   options.UseSqlServer(efStoreOptions.ConnectionString);
                });
 
             builder.Services.AddScoped<IBlobMetaStore, EfBlobMetaStore>();
