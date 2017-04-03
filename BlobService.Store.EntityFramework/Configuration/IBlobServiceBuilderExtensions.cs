@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlobService.Store.EntityFramework.Configuration
+namespace BlobService.MetaStore.EntityFramework.Configuration
 {
     public static class IBlobServiceBuilderExtensions
     {

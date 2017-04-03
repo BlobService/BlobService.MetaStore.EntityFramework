@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace BlobService.Store.EntityFramework
+namespace BlobService.MetaStore.EntityFramework
 {
     public class EfBlobMetaStore : IBlobMetaStore
     {

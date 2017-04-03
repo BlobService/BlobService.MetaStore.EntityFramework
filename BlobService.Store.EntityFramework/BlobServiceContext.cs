@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlobService.Store.EntityFramework
+namespace BlobService.MetaStore.EntityFramework
 {
     public class BlobServiceContext : DbContext
     {
