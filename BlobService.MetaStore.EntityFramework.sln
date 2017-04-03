@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlobService.MetaStore.EntityFramework", "BlobService.Store.EntityFramework\BlobService.MetaStore.EntityFramework.csproj", "{E175F631-DDFA-4698-B920-0AA4045A121B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlobService.MetaStore.EntityFramework", "BlobService.MetaStore.EntityFramework\BlobService.MetaStore.EntityFramework.csproj", "{E175F631-DDFA-4698-B920-0AA4045A121B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlobService.Store.EntityFramework.Tests", "BlobService.Store.EntityFramework.Tests\BlobService.Store.EntityFramework.Tests.csproj", "{18D8C6C0-117F-44F5-B0B3-BECC183B1C03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlobService.MetaStore.EntityFramework.Tests", "BlobService.MetaStore.EntityFramework.Tests\BlobService.MetaStore.EntityFramework.Tests.csproj", "{18D8C6C0-117F-44F5-B0B3-BECC183B1C03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
