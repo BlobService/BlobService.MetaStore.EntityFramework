@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace BlobService.MetaStore.EntityFramework
+namespace BlobService.MetaStore.EntityFrameworkCore
 {
     public class EfContainerMetaStore : IContainerMetaStore
     {

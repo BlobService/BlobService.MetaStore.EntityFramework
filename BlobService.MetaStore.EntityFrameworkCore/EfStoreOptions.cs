@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlobService.MetaStore.EntityFramework
+namespace BlobService.MetaStore.EntityFrameworkCore
 {
     public class EfStoreOptions
     {
