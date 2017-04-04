@@ -44,7 +44,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
         public async Task RemoveAsync(string key)
         {
             var blob = await _dbContext.BlobsMetaData.FindAsync(key);
-            if(blob != null)
+            if (blob != null)
             {
                 _dbContext.BlobsMetaData.Remove(blob);
                 await _dbContext.SaveChangesAsync();
