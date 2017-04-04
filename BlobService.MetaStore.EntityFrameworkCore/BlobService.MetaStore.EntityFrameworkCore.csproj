@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.1.1</Version>
+    <Version>0.1.5</Version>
     <Authors>BlobService</Authors>
     <Company>BlobService</Company>
     <Copyright>Copyright Aram Kocharyan</Copyright>
@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlobService.Core" Version="0.1.2" />
+    <PackageReference Include="BlobService.Core" Version="0.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
   </ItemGroup>

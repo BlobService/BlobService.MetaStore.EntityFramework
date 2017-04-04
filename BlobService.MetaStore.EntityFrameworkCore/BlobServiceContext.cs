@@ -13,21 +13,23 @@ namespace BlobService.MetaStore.EntityFrameworkCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var containerMetaEntity = modelBuilder.Entity<ContainerMeta>();
+            modelBuilder.Entity<ContainerMeta>(c =>
+            {
+                c.HasKey(x => x.Id);
+                c.HasIndex(x => x.Name).HasName("ContainerNameIndex").IsUnique();
+                c.Property(x => x.Name).HasMaxLength(256);
+                c.ToTable("BlobServiceContainers");
+                c.HasMany(x => x.Blobs).WithOne().HasForeignKey(y => y.ContainerId).IsRequired();
+            });
 
-            // TODO create correct mappings
-            containerMetaEntity.ToTable("ContainersMetaData");
-            containerMetaEntity.HasKey(x => x.Id).HasName("PK_Id");
-            containerMetaEntity.HasIndex(x => x.Name).HasName("IX_Name").IsUnique(true);
-            containerMetaEntity.HasMany<BlobMeta>().WithOne();
-
-            var blobMetaEntity = modelBuilder.Entity<BlobMeta>();
-            blobMetaEntity.HasKey(x => x.Id).HasName("PK_Id");
-            blobMetaEntity.HasOne<ContainerMeta>().WithOne().HasForeignKey("ContainerId");
-
-
-
-
+            modelBuilder.Entity<BlobMeta>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.MimeType).HasMaxLength(256);
+                b.Property(x => x.OrigFileName).HasMaxLength(256);
+                b.Property(x => x.StorageSubject).HasMaxLength(256);
+                b.ToTable("BlobServiceBlobs");
+            });
         }
     }
 }
