@@ -1,4 +1,5 @@
 ﻿using BlobService.Core.Configuration;
+using BlobService.Core.Entities;
 using BlobService.Core.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -13,6 +14,14 @@ namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
     {
         public static IBlobServiceBuilder AddEfMetaStores(this IBlobServiceBuilder builder, Action<EfStoreOptions> setupAction = null)
         {
+            return builder.AddEfMetaStores<BlobServiceContext<ContainerMeta, BlobMeta>, ContainerMeta, BlobMeta>(setupAction);
+        }
+
+        public static IBlobServiceBuilder AddEfMetaStores<TContext, TContainerMeta, TBlobMeta>(this IBlobServiceBuilder builder, Action<EfStoreOptions> setupAction = null)
+            where TContext : BlobServiceContext<TContainerMeta, TBlobMeta>
+            where TContainerMeta : class, IContainerMeta, new()
+            where TBlobMeta : class, IBlobMeta, new()
+        {
             var efStoreOptions = new EfStoreOptions();
             setupAction?.Invoke(efStoreOptions);
             efStoreOptions.TryValidate();
@@ -21,13 +30,13 @@ namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
 
             builder.Services
                .AddEntityFramework()
-               .AddDbContext<BlobServiceContext>(options =>
+               .AddDbContext<TContext>(options =>
                {
                    options.UseSqlServer(efStoreOptions.ConnectionString);
                });
 
-            builder.Services.AddScoped<IBlobMetaStore, EfBlobMetaStore>();
-            builder.Services.AddScoped<IContainerMetaStore, EfContainerMetaStore>();
+            builder.Services.AddScoped<IBlobMetaStore, EfBlobMetaStore<TContainerMeta, TBlobMeta>>();
+            builder.Services.AddScoped<IContainerMetaStore, EfContainerMetaStore<TContainerMeta, TBlobMeta>>();
 
             return builder;
         }

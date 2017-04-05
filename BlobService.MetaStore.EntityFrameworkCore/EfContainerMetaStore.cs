@@ -6,37 +6,45 @@ using BlobService.Core.Entities;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using BlobService.Core.Models;
 
 namespace BlobService.MetaStore.EntityFrameworkCore
 {
-    public class EfContainerMetaStore : IContainerMetaStore
+    public class EfContainerMetaStore<TContainerMeta, TBlobMeta> : IContainerMetaStore
+        where TContainerMeta : class, IContainerMeta, new()
+        where TBlobMeta : class, IBlobMeta, new()
     {
-        protected readonly BlobServiceContext _dbContext;
-        public EfContainerMetaStore(BlobServiceContext dbContext)
+        protected readonly BlobServiceContext<TContainerMeta, TBlobMeta> _dbContext;
+        public EfContainerMetaStore(BlobServiceContext<TContainerMeta, TBlobMeta> dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<ContainerMeta> AddAsync(ContainerMeta container)
+        public async Task<IContainerMeta> AddAsync(ContainerCreateModel contianerModel)
         {
+            var container = new TContainerMeta()
+            {
+                Name = contianerModel.Name
+            };
+
             _dbContext.ContainersMetaData.Add(container);
             await _dbContext.SaveChangesAsync();
 
             return container;
         }
 
-        public async Task<IEnumerable<ContainerMeta>> GetAllAsync()
+        public async Task<IEnumerable<IContainerMeta>> GetAllAsync()
         {
             return await _dbContext.ContainersMetaData.ToListAsync();
         }
 
-        public async Task<ContainerMeta> GetAsync(string key)
+        public async Task<IContainerMeta> GetAsync(string key)
         {
             var container = await _dbContext.ContainersMetaData.FindAsync(key);
             return container;
         }
 
-        public async Task<IEnumerable<BlobMeta>> GetBlobsAsync(string containerKey)
+        public async Task<IEnumerable<IBlobMeta>> GetBlobsAsync(string containerKey)
         {
             var blobs = await _dbContext.BlobsMetaData
                 .Where(x => x.ContainerId == containerKey)
@@ -45,7 +53,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
             return blobs;
         }
 
-        public async Task<ContainerMeta> GetByNameAsync(string name)
+        public async Task<IContainerMeta> GetByNameAsync(string name)
         {
             var container = await _dbContext.ContainersMetaData
                 .Where(x => x.Name == name)
@@ -64,7 +72,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
             }
         }
 
-        public async Task<ContainerMeta> UpdateAsync(string key, ContainerMeta container)
+        public async Task<IContainerMeta> UpdateAsync(string key, IContainerMeta container)
         {
             var existingContainer = await _dbContext.ContainersMetaData.FindAsync(key);
 

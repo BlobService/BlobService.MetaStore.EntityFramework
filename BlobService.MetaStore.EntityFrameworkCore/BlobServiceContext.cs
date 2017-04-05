@@ -6,14 +6,16 @@ using System.Text;
 
 namespace BlobService.MetaStore.EntityFrameworkCore
 {
-    public class BlobServiceContext : DbContext
+    public class BlobServiceContext<TContainerMeta, TBlobMeta> : DbContext
+        where TContainerMeta : class, IContainerMeta
+        where TBlobMeta : class, IBlobMeta
     {
-        public DbSet<ContainerMeta> ContainersMetaData { get; set; }
-        public DbSet<BlobMeta> BlobsMetaData { get; set; }
+        public DbSet<TContainerMeta> ContainersMetaData { get; set; }
+        public DbSet<TBlobMeta> BlobsMetaData { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ContainerMeta>(c =>
+            modelBuilder.Entity<TContainerMeta>(c =>
             {
                 c.HasKey(x => x.Id);
                 c.HasIndex(x => x.Name).HasName("ContainerNameIndex").IsUnique();
@@ -22,7 +24,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
                 c.HasMany(x => x.Blobs).WithOne().HasForeignKey(y => y.ContainerId).IsRequired();
             });
 
-            modelBuilder.Entity<BlobMeta>(b =>
+            modelBuilder.Entity<TBlobMeta>(b =>
             {
                 b.HasKey(x => x.Id);
                 b.Property(x => x.MimeType).HasMaxLength(256);

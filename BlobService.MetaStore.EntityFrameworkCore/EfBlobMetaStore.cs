@@ -6,26 +6,38 @@ using BlobService.Core.Entities;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using BlobService.Core.Models;
 
 namespace BlobService.MetaStore.EntityFrameworkCore
 {
-    public class EfBlobMetaStore : IBlobMetaStore
+    public class EfBlobMetaStore<TContainerMeta, TBlobMeta> : IBlobMetaStore
+        where TContainerMeta : class, IContainerMeta, new()
+        where TBlobMeta : class, IBlobMeta, new()
     {
-        protected readonly BlobServiceContext _dbContext;
-        public EfBlobMetaStore(BlobServiceContext dbContext)
+        protected readonly BlobServiceContext<TContainerMeta, TBlobMeta> _dbContext;
+        public EfBlobMetaStore(BlobServiceContext<TContainerMeta, TBlobMeta> dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<BlobMeta> AddAsync(BlobMeta blob)
+        public async Task<IBlobMeta> AddAsync(BlobCreateModel blobModel)
         {
+            var blob = new TBlobMeta
+            {
+                ContainerId = blobModel.ContainerId,
+                MimeType = blobModel.MimeType,
+                OrigFileName = blobModel.OrigFileName,
+                SizeInBytes = blobModel.SizeInBytes,
+                StorageSubject = blobModel.StorageSubject
+            };
+
             _dbContext.BlobsMetaData.Add(blob);
             await _dbContext.SaveChangesAsync();
 
             return blob;
         }
 
-        public async Task<IEnumerable<BlobMeta>> GetAllAsync(string containerId)
+        public async Task<IEnumerable<IBlobMeta>> GetAllAsync(string containerId)
         {
             var blobs = await _dbContext.BlobsMetaData
                 .Where(x => x.ContainerId == containerId)
@@ -34,7 +46,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
             return blobs;
         }
 
-        public async Task<BlobMeta> GetAsync(string key)
+        public async Task<IBlobMeta> GetAsync(string key)
         {
             var blob = await _dbContext.BlobsMetaData.FindAsync(key);
 
@@ -51,7 +63,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
             }
         }
 
-        public async Task<BlobMeta> UpdateAsync(string key, BlobMeta blob)
+        public async Task<IBlobMeta> UpdateAsync(string key, IBlobMeta blob)
         {
             var existingBlob = await _dbContext.BlobsMetaData.FindAsync(key);
 
