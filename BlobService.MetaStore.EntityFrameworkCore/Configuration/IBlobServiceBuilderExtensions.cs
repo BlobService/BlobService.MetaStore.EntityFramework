@@ -12,9 +12,10 @@ namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
 {
     public static class IBlobServiceBuilderExtensions
     {
-        public static IBlobServiceBuilder AddEfMetaStores(this IBlobServiceBuilder builder, Action<EfStoreOptions> setupAction = null)
+        public static IBlobServiceBuilder AddEfMetaStores<TContext>(this IBlobServiceBuilder builder, Action<EfStoreOptions> setupAction = null)
+            where TContext : BlobServiceContext<ContainerMeta, BlobMeta>
         {
-            return builder.AddEfMetaStores<BlobServiceContext<ContainerMeta, BlobMeta>, ContainerMeta, BlobMeta>(setupAction);
+            return builder.AddEfMetaStores<TContext, ContainerMeta, BlobMeta>(setupAction);
         }
 
         public static IBlobServiceBuilder AddEfMetaStores<TContext, TContainerMeta, TBlobMeta>(this IBlobServiceBuilder builder, Action<EfStoreOptions> setupAction = null)
@@ -30,10 +31,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
 
             builder.Services
                .AddEntityFramework()
-               .AddDbContext<TContext>(options =>
-               {
-                   options.UseSqlServer(efStoreOptions.ConnectionString);
-               });
+               .AddDbContext<TContext>();
 
             builder.Services.AddScoped<IBlobMetaStore, EfBlobMetaStore<TContainerMeta, TBlobMeta>>();
             builder.Services.AddScoped<IContainerMetaStore, EfContainerMetaStore<TContainerMeta, TBlobMeta>>();

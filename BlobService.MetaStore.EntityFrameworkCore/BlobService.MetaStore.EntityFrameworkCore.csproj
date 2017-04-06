@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.1.7</Version>
+    <Version>0.1.8</Version>
     <Authors>BlobService</Authors>
     <Company>BlobService</Company>
     <Copyright>Copyright Aram Kocharyan</Copyright>
