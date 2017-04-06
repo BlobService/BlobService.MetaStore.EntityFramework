@@ -27,7 +27,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
                 Name = contianerModel.Name
             };
 
-            _dbContext.ContainersMetaData.Add(container);
+            _dbContext.ContainersMetadata.Add(container);
             await _dbContext.SaveChangesAsync();
 
             return container;
@@ -35,18 +35,18 @@ namespace BlobService.MetaStore.EntityFrameworkCore
 
         public async Task<IEnumerable<IContainerMeta>> GetAllAsync()
         {
-            return await _dbContext.ContainersMetaData.ToListAsync();
+            return await _dbContext.ContainersMetadata.ToListAsync();
         }
 
         public async Task<IContainerMeta> GetAsync(string key)
         {
-            var container = await _dbContext.ContainersMetaData.FindAsync(key);
+            var container = await _dbContext.ContainersMetadata.FindAsync(key);
             return container;
         }
 
         public async Task<IEnumerable<IBlobMeta>> GetBlobsAsync(string containerKey)
         {
-            var blobs = await _dbContext.BlobsMetaData
+            var blobs = await _dbContext.BlobsMetadata
                 .Where(x => x.ContainerId == containerKey)
                 .ToListAsync();
 
@@ -55,7 +55,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
 
         public async Task<IContainerMeta> GetByNameAsync(string name)
         {
-            var container = await _dbContext.ContainersMetaData
+            var container = await _dbContext.ContainersMetadata
                 .Where(x => x.Name == name)
                 .SingleOrDefaultAsync();
 
@@ -64,17 +64,17 @@ namespace BlobService.MetaStore.EntityFrameworkCore
 
         public async Task RemoveAsync(string key)
         {
-            var container = await _dbContext.ContainersMetaData.FindAsync(key);
+            var container = await _dbContext.ContainersMetadata.FindAsync(key);
             if (container != null)
             {
-                _dbContext.ContainersMetaData.Remove(container);
+                _dbContext.ContainersMetadata.Remove(container);
                 await _dbContext.SaveChangesAsync();
             }
         }
 
         public async Task<IContainerMeta> UpdateAsync(string key, IContainerMeta container)
         {
-            var existingContainer = await _dbContext.ContainersMetaData.FindAsync(key);
+            var existingContainer = await _dbContext.ContainersMetadata.FindAsync(key);
 
             _dbContext.Entry(existingContainer).CurrentValues.SetValues(container);
             _dbContext.Entry(existingContainer).State = EntityState.Modified;
