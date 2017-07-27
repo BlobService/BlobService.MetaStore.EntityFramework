@@ -19,7 +19,6 @@ namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
         {
             var efStoreOptions = new EfStoreOptions();
             setupAction?.Invoke(efStoreOptions);
-            efStoreOptions.TryValidate();
 
             builder.Services.AddSingleton(efStoreOptions);
 
