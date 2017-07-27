@@ -10,12 +10,13 @@ using BlobService.Core.Models;
 
 namespace BlobService.MetaStore.EntityFrameworkCore
 {
-    public class EfContainerMetaStore<TContainerMeta, TBlobMeta> : IContainerMetaStore
+    public class EfContainerMetaStore<TContext, TContainerMeta, TBlobMeta> : IContainerMetaStore
+        where TContext : BlobServiceContext<TContainerMeta, TBlobMeta>
         where TContainerMeta : class, IContainerMeta, new()
         where TBlobMeta : class, IBlobMeta, new()
     {
-        protected readonly BlobServiceContext<TContainerMeta, TBlobMeta> _dbContext;
-        public EfContainerMetaStore(BlobServiceContext<TContainerMeta, TBlobMeta> dbContext)
+        protected readonly TContext _dbContext;
+        public EfContainerMetaStore(TContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }

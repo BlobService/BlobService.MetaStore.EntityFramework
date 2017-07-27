@@ -26,8 +26,8 @@ namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
                .AddEntityFramework()
                .AddDbContext<TContext>();
 
-            builder.Services.AddScoped<IBlobMetaStore, EfBlobMetaStore<TContainerMeta, TBlobMeta>>();
-            builder.Services.AddScoped<IContainerMetaStore, EfContainerMetaStore<TContainerMeta, TBlobMeta>>();
+            builder.Services.AddScoped<IBlobMetaStore, EfBlobMetaStore<TContext, TContainerMeta, TBlobMeta>>();
+            builder.Services.AddScoped<IContainerMetaStore, EfContainerMetaStore<TContext, TContainerMeta, TBlobMeta>>();
 
             return builder;
         }
