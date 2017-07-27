@@ -12,12 +12,6 @@ namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
 {
     public static class IBlobServiceBuilderExtensions
     {
-        public static IBlobServiceBuilder AddEfMetaStores<TContext>(this IBlobServiceBuilder builder, Action<EfStoreOptions> setupAction = null)
-            where TContext : BlobServiceContext<ContainerMeta, BlobMeta>
-        {
-            return builder.AddEfMetaStores<TContext, ContainerMeta, BlobMeta>(setupAction);
-        }
-
         public static IBlobServiceBuilder AddEfMetaStores<TContext, TContainerMeta, TBlobMeta>(this IBlobServiceBuilder builder, Action<EfStoreOptions> setupAction = null)
             where TContext : BlobServiceContext<TContainerMeta, TBlobMeta>
             where TContainerMeta : class, IContainerMeta, new()

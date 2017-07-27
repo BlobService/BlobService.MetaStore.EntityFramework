@@ -13,6 +13,8 @@ namespace BlobService.MetaStore.EntityFrameworkCore
         public DbSet<TContainerMeta> ContainersMetadata { get; set; }
         public DbSet<TBlobMeta> BlobsMetadata { get; set; }
 
+        public BlobServiceContext(DbContextOptions options) : base(options) { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TContainerMeta>(c =>
