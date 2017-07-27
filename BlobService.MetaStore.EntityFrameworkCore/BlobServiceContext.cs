@@ -23,7 +23,6 @@ namespace BlobService.MetaStore.EntityFrameworkCore
                 c.HasIndex(x => x.Name).HasName("ContainerNameIndex").IsUnique();
                 c.Property(x => x.Name).HasMaxLength(256);
                 c.ToTable("BlobService_ContainersMetadata");
-                c.HasMany(x => x.Blobs).WithOne().HasForeignKey(y => y.ContainerId).IsRequired();
             });
 
             modelBuilder.Entity<TBlobMeta>(b =>
@@ -33,6 +32,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
                 b.Property(x => x.OrigFileName).HasMaxLength(256);
                 b.Property(x => x.StorageSubject).HasMaxLength(256);
                 b.ToTable("BlobService_BlobsMetadata");
+                b.HasOne(x => x.ContainerId).WithMany().IsRequired();
             });
         }
     }
