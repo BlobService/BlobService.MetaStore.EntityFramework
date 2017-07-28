@@ -12,8 +12,8 @@ namespace BlobService.MetaStore.EntityFrameworkCore
 {
     public class EfContainerMetaStore<TContext, TContainerMeta, TBlobMeta> : IContainerMetaStore
         where TContext : BlobServiceContext<TContainerMeta, TBlobMeta>
-        where TContainerMeta : class, IContainerMeta, new()
-        where TBlobMeta : class, IBlobMeta, new()
+        where TContainerMeta : ContainerMeta, new()
+        where TBlobMeta : BlobMeta, new()
     {
         protected readonly TContext _dbContext;
         public EfContainerMetaStore(TContext dbContext)

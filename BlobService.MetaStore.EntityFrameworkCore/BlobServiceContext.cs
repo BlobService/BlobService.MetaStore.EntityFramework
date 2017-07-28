@@ -7,8 +7,8 @@ using System.Text;
 namespace BlobService.MetaStore.EntityFrameworkCore
 {
     public class BlobServiceContext<TContainerMeta, TBlobMeta> : DbContext
-        where TContainerMeta : class, IContainerMeta
-        where TBlobMeta : class, IBlobMeta
+        where TContainerMeta : ContainerMeta
+        where TBlobMeta : BlobMeta
     {
         public DbSet<TContainerMeta> ContainersMetadata { get; set; }
         public DbSet<TBlobMeta> BlobsMetadata { get; set; }
@@ -19,20 +19,13 @@ namespace BlobService.MetaStore.EntityFrameworkCore
         {
             modelBuilder.Entity<TContainerMeta>(c =>
             {
-                c.HasKey(x => x.Id);
                 c.HasIndex(x => x.Name).HasName("ContainerNameIndex").IsUnique();
-                c.Property(x => x.Name).HasMaxLength(256);
                 c.ToTable("BlobService_ContainersMetadata");
             });
 
             modelBuilder.Entity<TBlobMeta>(b =>
             {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.MimeType).HasMaxLength(256);
-                b.Property(x => x.OrigFileName).HasMaxLength(256);
-                b.Property(x => x.StorageSubject).HasMaxLength(256);
                 b.ToTable("BlobService_BlobsMetadata");
-                b.HasOne(x => x.ContainerId).WithMany().IsRequired();
             });
         }
     }
