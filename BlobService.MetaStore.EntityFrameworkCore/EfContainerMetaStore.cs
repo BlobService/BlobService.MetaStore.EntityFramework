@@ -10,12 +10,11 @@ using BlobService.Core.Models;
 
 namespace BlobService.MetaStore.EntityFrameworkCore
 {
-    public class EfContainerMetaStore<TContext, TContainerMeta, TBlobMeta> : IContainerMetaStore
-        where TContext : BlobServiceContext<TContainerMeta, TBlobMeta>
-        where TContainerMeta : ContainerMeta, new()
-        where TBlobMeta : BlobMeta, new()
+    public class EfContainerMetaStore<TContext> : IContainerMetaStore
+        where TContext : BlobServiceContext
     {
         protected readonly TContext _dbContext;
+
         public EfContainerMetaStore(TContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
@@ -23,7 +22,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore
 
         public async Task<IContainerMeta> AddAsync(ContainerCreateModel contianerModel)
         {
-            var container = new TContainerMeta()
+            var container = new ContainerMeta()
             {
                 Name = contianerModel.Name
             };
