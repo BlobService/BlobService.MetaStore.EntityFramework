@@ -1,15 +1,12 @@
-﻿using BlobService.Core.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace BlobService.MetaStore.EntityFrameworkCore
 {
     public class BlobServiceContext : DbContext
     {
-        public DbSet<ContainerMeta> ContainersMetadata { get; set; }
-        public DbSet<BlobMeta> BlobsMetadata { get; set; }
+        public DbSet<Container> Containers { get; set; }
+        public DbSet<Blob> Blobs { get; set; }
+        public DbSet<BlobMetaData> BlobMetaDatas { get; set; }
 
         public BlobServiceContext(DbContextOptions options) : base(options)
         {
@@ -17,16 +14,22 @@ namespace BlobService.MetaStore.EntityFrameworkCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ContainerMeta>(c =>
+            modelBuilder.Entity<Container>(c =>
             {
                 c.HasIndex(x => x.Name).HasName("ContainerNameIndex").IsUnique();
-                c.ToTable("BlobService_ContainersMetadata");
+                c.ToTable("BlobService_Containers");
             });
 
-            modelBuilder.Entity<BlobMeta>(b =>
+            modelBuilder.Entity<Blob>(b =>
             {
-                b.ToTable("BlobService_BlobsMetadata");
+                b.ToTable("BlobService_Blobs");
             });
+
+            modelBuilder.Entity<BlobMetaData>(b =>
+            {
+                b.ToTable("BlobService_BlobsMetaDatas");
+            });
+
         }
     }
 }

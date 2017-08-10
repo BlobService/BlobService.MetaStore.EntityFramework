@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.3.8</Version>
+    <Version>0.4.2</Version>
     <Authors>BlobService</Authors>
     <Company>BlobService</Company>
     <Copyright>Copyright Aram Kocharyan</Copyright>
@@ -15,14 +15,18 @@
     <Description>EntityFramework metadata store implementations</Description>
     <PackageId>BlobService.MetaStore.EntityFrameworkCore</PackageId>
     <Product>BlobService.MetaStore.EntityFrameworkCore</Product>
-    <AssemblyVersion>0.3.8.0</AssemblyVersion>
-    <FileVersion>0.3.8.0</FileVersion>
+    <AssemblyVersion>0.4.2.0</AssemblyVersion>
+    <FileVersion>0.4.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BlobService.Core" Version="0.3.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BlobService\BlobService.Core\BlobService.Core.csproj" />
   </ItemGroup>
 
 </Project>

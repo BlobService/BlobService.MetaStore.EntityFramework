@@ -1,28 +1,27 @@
-﻿using BlobService.Core.Stores;
+﻿using BlobService.Core.Entities;
+using BlobService.Core.Models;
+using BlobService.Core.Stores;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using BlobService.Core.Entities;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using BlobService.Core.Models;
+using System.Threading.Tasks;
 
 namespace BlobService.MetaStore.EntityFrameworkCore
 {
-    public class EfBlobMetaStore<TContext> : IBlobMetaStore
+    public class EfBlobStore<TContext> : IBlobStore
         where TContext : BlobServiceContext
     {
         protected readonly TContext _dbContext;
 
-        public EfBlobMetaStore(TContext dbContext)
+        public EfBlobStore(TContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<IBlobMeta> AddAsync(BlobCreateModel blobModel)
+        public async Task<IBlob> AddAsync(BlobCreateModel blobModel)
         {
-            var blob = new BlobMeta
+            var blob = new Blob
             {
                 ContainerId = blobModel.ContainerId,
                 MimeType = blobModel.MimeType,
@@ -31,41 +30,40 @@ namespace BlobService.MetaStore.EntityFrameworkCore
                 StorageSubject = blobModel.StorageSubject
             };
 
-            _dbContext.BlobsMetadata.Add(blob);
+            _dbContext.Blobs.Add(blob);
             await _dbContext.SaveChangesAsync();
 
             return blob;
         }
 
-        public async Task<IEnumerable<IBlobMeta>> GetAllAsync(string containerId)
+        public async Task<IEnumerable<IBlob>> GetAllAsync(string containerId)
         {
-            var blobs = await _dbContext.BlobsMetadata
+            var blobs = await _dbContext.Blobs
                 .Where(x => x.ContainerId == containerId)
                 .ToListAsync();
 
             return blobs;
         }
 
-        public async Task<IBlobMeta> GetAsync(string key)
+        public async Task<IBlob> GetByIdAsync(string key)
         {
-            var blob = await _dbContext.BlobsMetadata.FindAsync(key);
-
+            var blob = await _dbContext.Blobs.Where(x => x.Id == key).Include(x => x.MetaData).FirstOrDefaultAsync();
             return blob;
         }
 
         public async Task RemoveAsync(string key)
         {
-            var blob = await _dbContext.BlobsMetadata.FindAsync(key);
+            var blob = await _dbContext.Blobs.FindAsync(key);
             if (blob != null)
             {
-                _dbContext.BlobsMetadata.Remove(blob);
+                _dbContext.Blobs.Remove(blob);
                 await _dbContext.SaveChangesAsync();
             }
         }
 
-        public async Task<IBlobMeta> UpdateAsync(string key, IBlobMeta blob)
+        public async Task<IBlob> UpdateAsync(string key, IBlob blob)
         {
-            var existingBlob = await _dbContext.BlobsMetadata.FindAsync(key);
+            var existingBlob = await _dbContext.Blobs.FindAsync(key);
 
             _dbContext.Entry(existingBlob).CurrentValues.SetValues(blob);
             _dbContext.Entry(existingBlob).State = EntityState.Modified;

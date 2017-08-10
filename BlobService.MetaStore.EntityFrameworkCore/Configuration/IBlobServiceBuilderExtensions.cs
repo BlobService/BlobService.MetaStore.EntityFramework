@@ -1,12 +1,8 @@
 ﻿using BlobService.Core.Configuration;
-using BlobService.Core.Entities;
 using BlobService.Core.Stores;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
 {
@@ -24,9 +20,9 @@ namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
                .AddEntityFramework()
                .AddDbContext<TContext>();
 
-            builder.Services.AddScoped<IBlobMetaStore, EfBlobMetaStore<TContext>>();
-            builder.Services.AddScoped<IContainerMetaStore, EfContainerMetaStore<TContext>>();
-
+            builder.Services.AddScoped<IBlobStore, EfBlobStore<TContext>>();
+            builder.Services.AddScoped<IContainerStore, EfContainerStore<TContext>>();
+            builder.Services.AddScoped<IBlobMetaDataStore, EfBlobMetaDataStore<TContext>>();
             return builder;
         }
     }
