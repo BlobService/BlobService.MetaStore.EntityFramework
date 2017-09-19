@@ -1,6 +1,5 @@
 ﻿using BlobService.Core.Configuration;
 using BlobService.Core.Stores;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -17,7 +16,7 @@ namespace BlobService.MetaStore.EntityFrameworkCore.Configuration
             builder.Services.AddSingleton(efStoreOptions);
 
             builder.Services
-               .AddEntityFramework()
+               .AddEntityFrameworkSqlServer()
                .AddDbContext<TContext>();
 
             builder.Services.AddScoped<IBlobStore, EfBlobStore<TContext>>();
